@@ -1,0 +1,6 @@
+This is a Qt QML plugin for MongoDB access.
+QML is a web-styled programming and interface design language and MongoDB is a javascript-styled NoSQL database.
+
+Demo:
+Take a look at the demo.qml file to get an idea how this works
+[demo]: https://github.com/manuels/QtMongo/blob/master/demo.qml

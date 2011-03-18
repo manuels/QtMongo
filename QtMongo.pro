@@ -24,7 +24,8 @@ SOURCES += \
 
 OTHER_FILES += \
     demo.qml \
-    qmldir
+    qmldir \
+    README
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options
