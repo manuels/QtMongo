@@ -46,22 +46,28 @@ ListView {
 
 
             onClicked: {
+                // this corresponds to SQL's "WHERE j=5":
                 console.debug( db.collection("testdb.things").find({j:5}) )
+                // insert an object:
                 console.debug( db.collection("testdb.things").insert({ddd:445}) )
 
+                // find all objects with "j=5" and present it in the listview:
                 listview.model = db.collection("testdb.things").find({j:5})
+                // find all objects and present it in the listview:
                 listview.model = db.collection("testdb.things").find({})
-                db.collection("testdb.things").find({}, ["j"]).forEach(function(x) { console.log(x) } )
 
+                // find all objects with ddd=445, create a copy of it (upsert) and modify ddd to 446:
                 console.debug( db.collection("testdb.things").update({ddd:445},{ddd:446}, {upsert: true}) )
-                console.debug( db.collections )
+                // find all objects in mythings
                 console.debug( mythings.find({}) )
 
+                // map reduce:
                 console.debug("mapReduce:");
                 var map = function() { emit(this.j); }
                 var reduce = function(k,vals) { return 1; }
-
-                console.inspect( mythings.mapReduce(map.toString(), reduce.toString()) )
+                // take care: you've got to call toString() for each function!
+                console.debug( mythings.mapReduce(map.toString(), reduce.toString()) )
+                // but you cannot get the result of mapReduce, yet. That's what I'm currently working on
             }
         }
     }
