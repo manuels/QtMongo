@@ -28,6 +28,7 @@ QMap<QString, QVariant> fromBson(mongo::BSONObj bson) {
             break;
         case mongo::jstOID:
             obj[name] = QString::fromStdString(e.__oid().str());
+            break;
         case mongo::Bool:
             obj[name] = e.boolean();
             break;

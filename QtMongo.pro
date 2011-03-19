@@ -13,14 +13,16 @@ HEADERS += \
     QMongoDB.h \
     QMongoCollection.h \
     BSON.h \
-    QMongoQuery.h
+    QMongoQuery.h \
+    QMongoMapReduceResult.h
 
 SOURCES += \
     QtMongoPlugin.cpp \
     QMongoDB.cpp \
     QMongoCollection.cpp \
     BSON.cpp \
-    QMongoQuery.cpp
+    QMongoQuery.cpp \
+    QMongoMapReduceResult.cpp
 
 OTHER_FILES += \
     demo.qml \

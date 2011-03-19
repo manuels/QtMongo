@@ -3,6 +3,7 @@
 #include "QMongoDB.h"
 #include "QMongoQuery.h"
 #include "QMongoCollection.h"
+#include "QMongoMapReduceResult.h"
 #include "BSON.h"
 
 QMongoCollection::QMongoCollection(QObject *parent) :
@@ -17,7 +18,7 @@ QMongoCollection::QMongoCollection(QString name, QObject *parent) :
 }
 
 
-QMongoQuery* QMongoCollection::find(QMap<QString, QVariant> query) {
+QMongoQuery* QMongoCollection::find(QVariantMap query) {
     QMongoQuery *q = new QMongoQuery(this);
     q->setCollection(this);
     q->setQueryObject(query);
@@ -44,7 +45,7 @@ void QMongoCollection::update(QMap<QString, QVariant> query,
                               QMap<QString, QVariant> flags)
 {
     bool upsert = flags["upsert"].toBool();
-    bool multi = flags["upsert"].toBool();
+    bool multi = flags["muli"].toBool();
 
     conn()->update(fullCollectionName().toStdString(),
                    toBson(query),
@@ -55,7 +56,10 @@ QString QMongoCollection::fullCollectionName() {
     return db()->dbName()+"."+collName;
 }
 
-QVariant QMongoCollection::mapReduce(QString map, QString reduce) {
+QMongoMapReduceResult* QMongoCollection::mapReduce(QString map, QString reduce) {
+    qDebug() << "QMongoCollection::mapReduce(): " << fullCollectionName() << map << reduce;
     mongo::BSONObj b = conn()->mapreduce(fullCollectionName().toStdString(), map.toStdString(), reduce.toStdString());
-    return fromBson(b);
+
+    QVariantMap resultObject = fromBson(b);
+    return new QMongoMapReduceResult(resultObject, db());
 }

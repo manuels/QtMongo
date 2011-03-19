@@ -20,7 +20,10 @@ void QMongoQuery::componentComplete() {
 void QMongoQuery::query() {
     emit layoutAboutToBeChanged();
     int i=0;
-    mongo::DBClientCursor* cursor = conn()->query(collection()->fullCollectionName().toStdString(), toBson(queryObject().toMap())).release();
+    mongo::DBClientCursor* cursor
+            = conn()->query(collection()->fullCollectionName().toStdString(),
+                            toBson(queryObject().toMap()))
+                      .release();
     while(cursor->more()) {
         m_data << fromBson(cursor->next());
         ++i;
@@ -40,11 +43,6 @@ QVariant QMongoQuery::data(const QModelIndex &index, int role) const {
         return QVariant();
     else
         return m_data[index.row()];
-}
-
-QMongoQuery* QMongoQuery::forEach(QVariant v) {
-    qDebug() << v;
-    return this;
 }
 
 mongo::DBClientConnection* QMongoQuery::conn() {

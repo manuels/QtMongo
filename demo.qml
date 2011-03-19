@@ -1,75 +1,113 @@
 // TAKE CARE OF PATH IN qmldir FILE!
 import Qt 4.7
 
-ListView {
-    id: listview
-    width: 300
+Rectangle {
+    width: 800
     height: 500
 
-    MongoDB {
-        id: db
-        name: "testdb"
-        host: "localhost"
+    ListView {
+        id: listview
+        width: 300
+        height: 500
+        focus: true
+        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
 
-        collections: [
-            MongoCollection {
-                    id: mythings
-                    name: "things"
+        MongoDB {
+            id: db
+            name: "testdb"
+            host: "localhost"
+
+            collections: [
+                MongoCollection {
+                        id: mythings
+                        name: "things"
+                }
+            ]
+        }
+
+        delegate: mydelegate
+
+        // this corresponds to
+        // model = mythings.find({}):
+        model: MongoQuery {
+            collection: mythings
+            query: {}
+        }
+
+        Component {
+            id: mydelegate
+
+            Text {
+                text: "Object "+obj._id
             }
-        ]
-    }
+        }
 
-    delegate: mydelegate
-    // this corresponds to mythings.find({})
-    model: MongoQuery {
-        collection: mythings
-        query: {}
-    }
+        onCurrentIndexChanged: {
+            var obj = listview.model.list()[listview.currentIndex];
+            var str = "{\n"
+            for(var key in obj)
+                str += "\t"+key+": "+obj[key]+"\n"
+            str +="}\n"
 
-    Component {
-        id: mydelegate
-        Text { text: obj.toString() }
-    }
-
-    Rectangle {
-        id: rectangle1
-        x: 183
-        y: 72
-        width: 100
-        height: 100
-        color: "#d53737"
-
-
-        MouseArea {
-            id: mouse_area1
-            anchors.fill: parent
-
-
-            onClicked: {
-                // this corresponds to SQL's "WHERE j=5":
-                console.debug( db.collection("testdb.things").find({j:5}) )
-                // insert an object:
-                console.debug( db.collection("testdb.things").insert({ddd:445}) )
-
-                // find all objects with "j=5" and present it in the listview:
-                listview.model = db.collection("testdb.things").find({j:5})
-                // find all objects and present it in the listview:
-                listview.model = db.collection("testdb.things").find({})
-
-                // find all objects with ddd=445, create a copy of it (upsert) and modify ddd to 446:
-                console.debug( db.collection("testdb.things").update({ddd:445},{ddd:446}, {upsert: true}) )
-                // find all objects in mythings
-                console.debug( mythings.find({}) )
-
-                // map reduce:
-                console.debug("mapReduce:");
-                var map = function() { emit(this.j); }
-                var reduce = function(k,vals) { return 1; }
-                // take care: you've got to call toString() for each function!
-                console.debug( mythings.mapReduce(map.toString(), reduce.toString()) )
-                // but you cannot get the result of mapReduce, yet. That's what I'm currently working on
-            }
+            currentObjAsJson.text = str
         }
     }
 
+    TextEdit {
+        id: currentObjAsJson
+        anchors.left: listview.right
+        width: 600
+        text: "hallo"
+    }
+
+    /*
+    console.log("this corresponds to SQL's 'WHERE j=5':")
+    console.debug( db.collection("testdb.things").find({j:5}) )
+    console.log("insert an object:")
+    console.debug( db.collection("testdb.things").insert({ddd:445}) )
+
+    console.log("find all objects with 'j=5' and present it in the listview:")
+    listview.model = db.collection("testdb.things").find({j:5})
+    console.log("find all objects and present it in the listview:")
+    listview.model = db.collection("testdb.things").find({})
+
+    console.log("find all objects with ddd=445, create a copy of it (upsert) and modify ddd to 446:")
+    console.debug( db.collection("testdb.things").update({ddd:445},{ddd:446}, {upsert: true}) )
+    console.log("find all objects in mythings")
+    console.debug( mythings.find({}) )
+    console.log("find all objects in mythings and convert it to an array of objects:")
+    console.inspect( mythings.find({}).list() )
+
+    console.debug("mapReduce:");
+    var map = function() {
+        emit( "1" , { count : 1 } );
+    }
+    var reduce = function( key , values ){
+        var total = 0;
+        for ( var i=0; i<values.length; i++ )
+            total += values[i].count;
+        return { count: total };
+    };
+    var result = mythings.mapReduce(map, reduce);
+    console.log( "result:" )
+    console.inspect( result )
+    console.log( "result.result.find():" )
+    console.inspect( result )
+    console.inspect( result.find().list() )
+    */
+
+
+    Rectangle {
+        id: hint
+        width: 300
+        height:  50
+        color: "red"
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+
+        Text {
+            text: "<b>Use up and down keys to navigate!</b>"
+        }
+    }
 }

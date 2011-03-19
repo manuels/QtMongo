@@ -17,14 +17,14 @@ class QMongoQuery : public QAbstractListModel, public QDeclarativeParserStatus
 public:
     QMongoQuery(QObject *parent = NULL);
 
+    Q_INVOKABLE
+    QList<QVariant> list() { return m_data; }
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     QVariant queryObject() { return m_queryObject; }
     void setQueryObject(QVariant query) { m_queryObject = query; }
-
-    Q_INVOKABLE
-    QMongoQuery* forEach(QVariant v);
 
     void classBegin() {};
     void componentComplete();
@@ -40,6 +40,7 @@ signals:
 public slots:
 
 protected:
+    QString m_nameSpace;
     QVariant m_queryObject;
     QMongoCollection *m_collection;
     QList<QVariant> m_data;

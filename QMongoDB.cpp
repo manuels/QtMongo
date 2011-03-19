@@ -27,7 +27,7 @@ void QMongoDB::componentComplete() {
         m_c->connect(host().toStdString());
     }
     catch( mongo::DBException &e ) {
-        qDebug() << "QMongoDB connect() failed";
+        qDebug() << "QMongoDB connect() failed!!!";
     }
     qDebug() << "QMongoDB componentComplete() done";
 }
