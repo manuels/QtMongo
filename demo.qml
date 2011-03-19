@@ -100,14 +100,18 @@ Rectangle {
     Rectangle {
         id: hint
         width: 300
-        height:  50
+        height:  100
         color: "red"
 
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
 
         Text {
-            text: "<b>Use up and down keys to navigate!</b>"
+            anchors.fill: parent
+            wrapMode: Text.WordWrap
+            text: "<b>Use up and down keys to navigate!</b><br/>"+
+                  "You also might want to modify the <b>MongoDB.name property</b> to your database name "+
+                  "and the <b>MongoCollection.name property</b> to your collection name to see any data"
         }
     }
 }
