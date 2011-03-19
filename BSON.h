@@ -5,7 +5,7 @@
 #include <QDateTime>
 #include <mongo/client/dbclient.h>
 
-mongo::BSONObj toBson(QMap<QString, QVariant> obj);
-QMap<QString, QVariant> fromBson(mongo::BSONObj bson);
+mongo::BSONObj toBson(QVariantMap obj);
+QVariantMap fromBson(mongo::BSONObj bson);
 
 #endif // BSON_H

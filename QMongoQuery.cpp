@@ -14,35 +14,40 @@ QMongoQuery::QMongoQuery(QObject *parent) :
 }
 
 void QMongoQuery::componentComplete() {
+    qDebug() << "QMongoQuery::componentComplete() queryObject:" << queryObject();
     query();
 }
 
 void QMongoQuery::query() {
+    qDebug() << "QMongoQuery::query()" <<
+        collection()->fullCollectionName() << queryObject();
+
     emit layoutAboutToBeChanged();
+    clear();
+
     int i=0;
-    mongo::DBClientCursor* cursor
-            = conn()->query(collection()->fullCollectionName().toStdString(),
-                            toBson(queryObject().toMap()))
-                      .release();
+    QString ns = collection()->fullCollectionName();
+    mongo::DBClientCursor* cursor =
+            conn()->query(ns.toStdString(), toBson(queryObject())).release();
     while(cursor->more()) {
-        m_data << fromBson(cursor->next());
+        append( fromBson(cursor->next()) );
         ++i;
     }
-    emit layoutChanged();
     qDebug() << "cursor contained" << i;
 
     delete cursor;
+    emit layoutChanged();
 }
 
 int QMongoQuery::rowCount(const QModelIndex &parent) const {
-    return m_data.length();
+    return length();
 }
 
 QVariant QMongoQuery::data(const QModelIndex &index, int role) const {
     if (role != Qt::UserRole)
         return QVariant();
     else
-        return m_data[index.row()];
+        return get(index.row());
 }
 
 mongo::DBClientConnection* QMongoQuery::conn() {

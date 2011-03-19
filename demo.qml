@@ -1,66 +1,117 @@
 // TAKE CARE OF PATH IN qmldir FILE!
 import Qt 4.7
+import "json"
+import "json/json2.js" as Json
 
-Rectangle {
-    width: 800
-    height: 500
+Row {
+    Column {
+        Text {
+            text: "<b>Object List:</b>"
+        }
 
-    ListView {
-        id: listview
-        width: 300
-        height: 500
-        focus: true
-        highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+        ListView {
+            id: listview
+            focus: true
+            highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
+            width: 250
+            height: 500
 
-        MongoDB {
-            id: db
-            name: "testdb"
-            host: "localhost"
+            MongoDB {
+                id: db
+                name: "testdb"
+                host: "localhost"
 
-            collections: [
-                MongoCollection {
-                        id: mythings
-                        name: "things"
+                collections: [
+                    MongoCollection {
+                            id: mythings
+                            name: "things"
+                    }
+                ]
+            }
+
+            delegate: mydelegate
+
+            // this corresponds to
+            // model = mythings.find({}):
+            model: MongoQuery {
+                collection: mythings
+                query: { return {} }
+            }
+
+            Component {
+                id: mydelegate
+
+                Text {
+                     // delegates can access the model using the 'obj' variable:
+                    text: "Object "+obj._id
                 }
-            ]
+            }
+
+            onCurrentIndexChanged: jsonEdit.object = listview.model.get(listview.currentIndex)
         }
+    }
 
-        delegate: mydelegate
+    Column {
+        width: 500
+        Row {
+            spacing: 2
 
-        // this corresponds to
-        // model = mythings.find({}):
-        model: MongoQuery {
-            collection: mythings
-            query: {}
-        }
-
-        Component {
-            id: mydelegate
-
-            Text {
-                text: "Object "+obj._id
+            Button {
+                text: "insert this object"
+                onButtonClicked: { mythings.insert(jsonEdit.object) }
+            }
+            Button {
+                text: "query this object"
+                onButtonClicked: listview.model = mythings.find(jsonEdit.object)
             }
         }
 
-        onCurrentIndexChanged: {
-            var obj = listview.model.list()[listview.currentIndex];
-            var str = "{\n"
-            for(var key in obj)
-                str += "\t"+key+": "+obj[key]+"\n"
-            str +="}\n"
+        JsonEdit {
+            id: jsonEdit
+            height: 300
+            width: parent.width
+        }
 
-            currentObjAsJson.text = str
+        Rectangle {
+            id: hint
+            height: 100
+            width: parent.width
+            color: "red"
+
+            Text {
+                anchors.fill: parent
+                wrapMode: Text.WordWrap
+                text: "<b>Use up and down keys to navigate!</b><br/>"+
+                      "You also might want to modify the <b>MongoDB.name property</b> to your database name "+
+                      "and the <b>MongoCollection.name property</b> to your collection name to see any data"
+            }
+        }
+
+        Row {
+            spacing: 2
+
+            Button {
+                text: "MapReduce Demo"
+                onButtonClicked: {
+                    var map = function() {
+                        emit( "1" , { count : 1 } );
+                    }
+                    var reduce = function( key , values ) {
+                        return {a: 55};
+                    };
+                    var result = mythings.mapReduce(map, reduce, {}, "myMapReduce");
+
+                    console.log( "MapReduce result:" )
+                    console.log( Json.JSON.stringify(result) )
+                    listview.model = result.find()
+                }
+            }
         }
     }
 
-    TextEdit {
-        id: currentObjAsJson
-        anchors.left: listview.right
-        width: 600
-        text: "hallo"
-    }
-
     /*
+    Here just some example code:
+
     console.log("this corresponds to SQL's 'WHERE j=5':")
     console.debug( db.collection("testdb.things").find({j:5}) )
     console.log("insert an object:")
@@ -75,43 +126,5 @@ Rectangle {
     console.debug( db.collection("testdb.things").update({ddd:445},{ddd:446}, {upsert: true}) )
     console.log("find all objects in mythings")
     console.debug( mythings.find({}) )
-    console.log("find all objects in mythings and convert it to an array of objects:")
-    console.inspect( mythings.find({}).list() )
-
-    console.debug("mapReduce:");
-    var map = function() {
-        emit( "1" , { count : 1 } );
-    }
-    var reduce = function( key , values ){
-        var total = 0;
-        for ( var i=0; i<values.length; i++ )
-            total += values[i].count;
-        return { count: total };
-    };
-    var result = mythings.mapReduce(map, reduce);
-    console.log( "result:" )
-    console.inspect( result )
-    console.log( "result.result.find():" )
-    console.inspect( result )
-    console.inspect( result.find().list() )
     */
-
-
-    Rectangle {
-        id: hint
-        width: 300
-        height:  100
-        color: "red"
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-
-        Text {
-            anchors.fill: parent
-            wrapMode: Text.WordWrap
-            text: "<b>Use up and down keys to navigate!</b><br/>"+
-                  "You also might want to modify the <b>MongoDB.name property</b> to your database name "+
-                  "and the <b>MongoCollection.name property</b> to your collection name to see any data"
-        }
-    }
 }

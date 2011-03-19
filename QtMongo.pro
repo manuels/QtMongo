@@ -28,7 +28,10 @@ OTHER_FILES += \
     demo.qml \
     qmldir \
     README \
-    LICENSE.txt
+    LICENSE \
+    json/JsonEdit.qml \
+    json/json2.js \
+    Button.qml
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options

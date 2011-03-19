@@ -6,18 +6,15 @@
 class QMongoMapReduceResult : public QMongoCollection
 {
     Q_OBJECT
-    Q_PROPERTY(int timeMillis READ timeMillis)
-    Q_PROPERTY(bool ok READ ok)
 
 public:
     explicit QMongoMapReduceResult(QVariantMap resultObject = QVariantMap(), QObject *parent = 0);
 
-    int timeMillis() { return m_resultObject["timeMillis"].toInt(); }
-    bool ok() { return m_resultObject["ok"].toBool(); }
-
     virtual QString fullCollectionName() { return m_resultName; }
+    virtual QString collectionName() { return m_resultName; }
 
 signals:
+    void error(QString errorMessage);
 
 public slots:
 

@@ -49,12 +49,12 @@ QDeclarativeListProperty<QMongoCollection> QMongoDB::collections() {
 
     delete(cursor); //!!!!!*/
 
-    QDeclarativeListProperty<QMongoCollection> c(this, NULL, appendCollection);
+    QDeclarativeListProperty<QMongoCollection> c(this, NULL, appendCollection, countCollections);
     return c;
 }
 
 void QMongoDB::appendCollection(QDeclarativeListProperty<QMongoCollection> *property, QMongoCollection *value) {
-    qDebug() << "QMongoDB::appendCollection()";
+    qDebug() << "QMongoDB::appendCollection() currently is a NOOP";
 /*    QMap<QString, QVariant> collections = _c.toMap();
     QMap<QString, QVariant> cmd;
 
@@ -74,3 +74,12 @@ void QMongoDB::appendCollection(QDeclarativeListProperty<QMongoCollection> *prop
     */
 }
 
+bool QMongoDB::drop() {
+    return conn()->dropDatabase(dbName().toStdString());
+}
+
+int QMongoDB::countCollections(QDeclarativeListProperty<QMongoCollection> *property) {
+    qDebug() << "QMongoDB::countCollections() currently is a NOOP";
+    qDebug() << property;
+    return 0;
+}

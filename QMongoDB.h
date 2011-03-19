@@ -25,6 +25,9 @@ public:
     Q_INVOKABLE
     QMongoCollection* collection(QString collection);
 
+    Q_INVOKABLE
+    bool drop();
+
     void classBegin() {}
     void componentComplete();
 
@@ -36,6 +39,7 @@ public:
 
     QDeclarativeListProperty<QMongoCollection> collections();
     static void appendCollection(QDeclarativeListProperty<QMongoCollection> *property, QMongoCollection *value);
+    static int countCollections(QDeclarativeListProperty<QMongoCollection> *property);
 
     mongo::DBClientConnection* conn() { Q_ASSERT(m_c); return m_c; }
 

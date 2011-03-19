@@ -1,8 +1,8 @@
 #include <QDebug>
 #include "BSON.h"
 
-QMap<QString, QVariant> fromBson(mongo::BSONObj bson) {
-    QMap<QString, QVariant> obj;
+QVariantMap fromBson(mongo::BSONObj bson) {
+    QVariantMap obj;
 
     for(mongo::BSONObjIterator i(bson); i.more();) {
         mongo::BSONElement e = i.next();
@@ -48,10 +48,10 @@ QMap<QString, QVariant> fromBson(mongo::BSONObj bson) {
     return obj;
 }
 
-mongo::BSONObj toBson(QMap<QString, QVariant> obj) {
+mongo::BSONObj toBson(QVariantMap obj) {
     mongo::BSONObjBuilder b;
 
-    QMap<QString, QVariant>::iterator it = obj.begin();
+    QVariantMap::iterator it = obj.begin();
     while(it != obj.end()) {
         const char* name = it.key().toStdString().c_str();
         QVariant v = it.value();

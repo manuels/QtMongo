@@ -25,19 +25,31 @@ public:
     QMongoQuery* find(QVariantMap query = QVariantMap());
 
     Q_INVOKABLE
-    void insert(QMap<QString, QVariant> data);
+    QVariantMap findOne(QVariantMap query = QVariantMap());
 
     Q_INVOKABLE
-    void update(QMap<QString, QVariant> query,
-                QMap<QString, QVariant> obj,
-                QMap<QString, QVariant> flags = QMap<QString, QVariant>());
+    void insert(QVariantMap data);
+
+    Q_INVOKABLE
+    void remove(QVariantMap  query,
+                QVariantMap flags);
+
+    Q_INVOKABLE
+    void update(QVariantMap query,
+                QVariantMap obj,
+                QVariantMap flags = QVariantMap());
 
     virtual QString fullCollectionName();
-    QString collectionName() { return collName;}
+    virtual QString collectionName() { return collName;}
     void setCollectionName(QString newName) { collName = newName; }
 
     Q_INVOKABLE
-    QMongoMapReduceResult* mapReduce(QString map, QString reduce);
+    bool drop();
+
+    Q_INVOKABLE
+    QMongoMapReduceResult* mapReduce(QString map, QString reduce,
+                                     QVariantMap query = QVariantMap(),
+                                     QString output = "");
 
     QMongoDB* db();
     mongo::DBClientConnection* conn();
