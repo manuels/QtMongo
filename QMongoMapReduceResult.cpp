@@ -6,7 +6,9 @@ QMongoMapReduceResult::QMongoMapReduceResult(QVariantMap resultObject, QObject *
     m_resultObject(resultObject)
 {
     qDebug() << "QMongoMapReduceResult::QMongoMapReduceResult()" << resultObject;
-    m_resultName = resultObject["result"].toString();
+    setCollectionName(resultObject["result"].toString());
+
+    qDebug() << "Collection Exists?" << db()->collectionExists(fullCollectionName());
 
     if (resultObject.contains("errmsg") )
         emit error(resultObject["errmsg"].toString());

@@ -10,9 +10,6 @@ class QMongoMapReduceResult : public QMongoCollection
 public:
     explicit QMongoMapReduceResult(QVariantMap resultObject = QVariantMap(), QObject *parent = 0);
 
-    virtual QString fullCollectionName() { return m_resultName; }
-    virtual QString collectionName() { return m_resultName; }
-
 signals:
     void error(QString errorMessage);
 

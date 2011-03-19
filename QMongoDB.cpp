@@ -83,3 +83,7 @@ int QMongoDB::countCollections(QDeclarativeListProperty<QMongoCollection> *prope
     qDebug() << property;
     return 0;
 }
+
+bool QMongoDB::collectionExists(QString ns) {
+    return conn()->exists(ns.toStdString());
+}

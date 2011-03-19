@@ -40,6 +40,8 @@ public:
     QDeclarativeListProperty<QMongoCollection> collections();
     static void appendCollection(QDeclarativeListProperty<QMongoCollection> *property, QMongoCollection *value);
     static int countCollections(QDeclarativeListProperty<QMongoCollection> *property);
+    Q_INVOKABLE
+    bool collectionExists(QString ns);
 
     mongo::DBClientConnection* conn() { Q_ASSERT(m_c); return m_c; }
 

@@ -91,19 +91,22 @@ Row {
             spacing: 2
 
             Button {
-                text: "MapReduce Demo"
+                text: "Run MapReduce Demo"
                 onButtonClicked: {
                     var map = function() {
-                        emit( "1" , { count : 1 } );
+                        emit( "1" , { counter : 1 } );
                     }
                     var reduce = function( key , values ) {
-                        return {a: 55};
+                        return { a: "b" };
                     };
-                    var result = mythings.mapReduce(map, reduce, {}, "myMapReduce");
+                    var result = mythings.mapReduce(map.toString(),
+                                                    reduce.toString(),
+                                                    {},
+                                                    "myMapReduce");
 
                     console.log( "MapReduce result:" )
                     console.log( Json.JSON.stringify(result) )
-                    listview.model = result.find()
+                    listview.model = result.find() // why is this result empty??
                 }
             }
         }
