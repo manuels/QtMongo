@@ -1,0 +1,3 @@
+[submodule "lib/mongodb"]
+	path = lib/mongodb
+	url = https://github.com/mongodb/mongo.git

@@ -1,17 +1,23 @@
+#include <QDebug>
 #include "QtMongoPlugin.h"
-#include "QMongoDB.h"
-#include "QMongoCollection.h"
-#include "QMongoQuery.h"
-#include "QMongoMapReduceResult.h"
+#include "QMongoDriver.h"
 #include <qdeclarative.h>
 
 void QtMongoPlugin::registerTypes(const char *uri)
 {
-    qmlRegisterType<QMongoDB>(uri, 1, 0, "MongoDB");
-    qmlRegisterType<QMongoCollection>(uri, 1, 0, "MongoCollection");
-    qmlRegisterType<QMongoQuery>(uri, 1, 0, "MongoQuery");
-    qmlRegisterUncreatableType<QMongoMapReduceResult>(uri, 1, 0, "MongoMapReduceResult",
-        QString("you cannot create map reduce results. use collection.mapReduce()"));
+    qmlRegisterUncreatableType<QMongoDriver>(uri, 1, 0, "MongoDriver",
+        QString("you cannot create a new MongoDriver!"));
+    qmlRegisterUncreatableType<QMongoCursor>(uri, 1, 0, "MongoCursor",
+        QString("you cannot create a new MongoCursor!"));
+}
+
+void QtMongoPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
+    QDeclarativeContext *ctx = engine->rootContext();
+    ctx->setContextProperty("mytest", 120);
+    ctx->setContextProperty("dummyBLA", "test text");
+    ctx->setContextProperty("Mongo", new QMongoDriver(this));
+
+    qDebug() << "QtMongoPlugin::initializeEngine()";
 }
 
 Q_EXPORT_PLUGIN2(qtmongodb, QtMongoPlugin);

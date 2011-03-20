@@ -10,19 +10,15 @@ MOC_DIR = tmp
 
 HEADERS += \
     QtMongoPlugin.h \
-    QMongoDB.h \
-    QMongoCollection.h \
     BSON.h \
-    QMongoQuery.h \
-    QMongoMapReduceResult.h
+    QMongoDriver.h \
+    QMongoCursor.h
 
 SOURCES += \
     QtMongoPlugin.cpp \
-    QMongoDB.cpp \
-    QMongoCollection.cpp \
     BSON.cpp \
-    QMongoQuery.cpp \
-    QMongoMapReduceResult.cpp
+    QMongoDriver.cpp \
+    QMongoCursor.cpp
 
 OTHER_FILES += \
     demo.qml \
@@ -31,7 +27,9 @@ OTHER_FILES += \
     LICENSE \
     json/JsonEdit.qml \
     json/json2.js \
-    Button.qml
+    Button.qml \
+    QtMongo/MongoDB.qml \
+    QtMongo/mongoenv.js
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options

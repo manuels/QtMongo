@@ -1,9 +1,14 @@
 // TAKE CARE OF PATH IN qmldir FILE!
 import Qt 4.7
+import "QtMongo"
 import "json"
 import "json/json2.js" as Json
 
 Row {
+    Text {
+        text: dummyBLA;
+        width:  mytest;
+    }
     Column {
         Text {
             text: "<b>Object List:</b>"
@@ -21,22 +26,22 @@ Row {
                 name: "testdb"
                 host: "localhost"
 
-                collections: [
+/*                collections: [
                     MongoCollection {
                             id: mythings
                             name: "things"
                     }
-                ]
+                ]*/
             }
 
             delegate: mydelegate
 
             // this corresponds to
             // model = mythings.find({}):
-            model: MongoQuery {
+/*            model: MongoQuery {
                 collection: mythings
                 query: { return {} }
-            }
+            }*/
 
             Component {
                 id: mydelegate
@@ -63,6 +68,15 @@ Row {
             Button {
                 text: "query this object"
                 onButtonClicked: listview.model = mythings.find(jsonEdit.object)
+            }
+            Button {
+                text: "my test"
+                onButtonClicked: {
+                    console.log(Mongo)
+                    console.log(db._db)
+                    console.log( Json.JSON.stringify(db._db) )
+                    console.log( Json.JSON.stringify(db._db.prototype) )
+                }
             }
         }
 
