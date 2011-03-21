@@ -18,6 +18,9 @@ public:
     QMongoDriver* init(QString host);
 
     Q_INVOKABLE
+    void test(QVariant d);
+
+    Q_INVOKABLE
     QMongoCursor* find(QString ns,
               QVariantMap query,
               QVariantMap fields,
@@ -25,6 +28,18 @@ public:
               int skip,
               int batchSize,
               int options);
+
+    Q_INVOKABLE
+    void insert(QString ns, QVariantMap object);
+
+    Q_INVOKABLE
+    QVariantMap mapReduce(QString ns, QString map, QString reduce, QVariantMap query, QString output);
+
+    Q_INVOKABLE
+    void remove(QString ns, QVariantMap object, bool justOne);
+
+    Q_INVOKABLE
+    void update(QString ns, QVariantMap query, QVariantMap object, bool upsert, bool multi);
 
 signals:
 

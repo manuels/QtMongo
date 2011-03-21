@@ -1,5 +1,5 @@
 import Qt 4.7
-import "json2.js" as Json
+import "QtMongo/lib/json/json2.js" as Json
 
 Rectangle {
     border.color: "gray"

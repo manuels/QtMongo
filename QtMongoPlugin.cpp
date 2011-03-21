@@ -13,11 +13,7 @@ void QtMongoPlugin::registerTypes(const char *uri)
 
 void QtMongoPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri) {
     QDeclarativeContext *ctx = engine->rootContext();
-    ctx->setContextProperty("mytest", 120);
-    ctx->setContextProperty("dummyBLA", "test text");
     ctx->setContextProperty("Mongo", new QMongoDriver(this));
-
-    qDebug() << "QtMongoPlugin::initializeEngine()";
 }
 
 Q_EXPORT_PLUGIN2(qtmongodb, QtMongoPlugin);

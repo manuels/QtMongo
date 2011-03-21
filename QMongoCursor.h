@@ -17,6 +17,9 @@ public:
     Q_INVOKABLE
     QVariantMap next();
 
+    Q_INVOKABLE
+    QVariantList toList();
+
     ~QMongoCursor();
 signals:
 

@@ -25,11 +25,20 @@ OTHER_FILES += \
     qmldir \
     README \
     LICENSE \
-    json/JsonEdit.qml \
-    json/json2.js \
     Button.qml \
     QtMongo/MongoDB.qml \
-    QtMongo/mongoenv.js
+    QtMongo/MongoCollection.qml \
+    QtMongo/MongoDB.js \
+    QtMongo/MongoCollection.js \
+    QtMongo/MongoQuery.qml \
+    QtMongo/mongo.js \
+    QtMongo/lib/json/json2.js \
+    JsonEdit.qml \
+    QtMongo/lib/mongodb/collection.js \
+    QtMongo/lib/mongodb/db.js \
+    QtMongo/lib/mongodb/query.js \
+    QtMongo/lib/mongodb/README \
+    QtMongo/MongoCode.js
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options

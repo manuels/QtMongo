@@ -21,3 +21,11 @@ QVariantMap QMongoCursor::next() {
 bool QMongoCursor::hasNext() {
     return cursor()->more();
 }
+
+QVariantList QMongoCursor::toList() {
+    QVariantList list;
+    while(hasNext())
+        list.append( next() );
+
+    return list;
+}

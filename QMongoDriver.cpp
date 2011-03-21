@@ -21,7 +21,6 @@ QMongoDriver* QMongoDriver::init(QString host) {
 QMongoCursor* QMongoDriver::find(QString ns, QVariantMap query, QVariantMap fields,
                         int limit, int skip, int batchSize, int options)
 {
-    qDebug() << "QMongoDriver::find()" << ns << query;
     mongo::DBClientCursor* cursor;
     cursor = conn()->query(ns.toStdString(),
                            mongo::Query(toBson(query)),
@@ -32,4 +31,31 @@ QMongoCursor* QMongoDriver::find(QString ns, QVariantMap query, QVariantMap fiel
                            batchSize).release();
 
     return new QMongoCursor(cursor, this);
+}
+
+void QMongoDriver::insert(QString ns, QVariantMap object) {
+    conn()->insert(ns.toStdString(), toBson(object));
+}
+
+void QMongoDriver::remove(QString ns, QVariantMap object, bool justOne) {
+    conn()->remove(ns.toStdString(), mongo::Query(toBson(object)), justOne);
+}
+
+void QMongoDriver::update(QString ns, QVariantMap query, QVariantMap object, bool upsert, bool multi) {
+    qDebug() << "QMongoDriver::update()" << ns << query << object;
+    conn()->update(ns.toStdString(), mongo::Query(toBson(query)), toBson(object), upsert, multi);
+}
+
+void QMongoDriver::test(QVariant d) {
+    qDebug() << d;
+}
+
+QVariantMap QMongoDriver::mapReduce(QString ns, QString map, QString reduce,
+                             QVariantMap query, QString output)
+{
+    return fromBson(conn()->mapreduce(ns.toStdString(),
+                                      map.toStdString(),
+                                      reduce.toStdString(),
+                                      toBson(query),
+                                      output.toStdString()));
 }

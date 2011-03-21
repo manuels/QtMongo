@@ -6,7 +6,7 @@ QVariantMap fromBson(mongo::BSONObj bson) {
 
     for(mongo::BSONObjIterator i(bson); i.more();) {
         mongo::BSONElement e = i.next();
-        QString name = e.fieldName();
+        QString name = QString::fromStdString(e.fieldName());
 
         switch(e.type()) {
         case mongo::EOO:
@@ -29,13 +29,14 @@ QVariantMap fromBson(mongo::BSONObj bson) {
         case mongo::jstOID:
             obj[name] = QString::fromStdString(e.__oid().str());
             break;
+        case mongo::jstNULL:
+            obj[name] = QVariant();
+            break;
         case mongo::Bool:
             obj[name] = e.boolean();
             break;
         case mongo::CodeWScope:
-            // TODO:
-            qCritical() << "fromBson(): how should I handle CodeWScope types?";
-            obj[name] = QVariant();
+            obj[name] = "MongoCode["+QString::fromStdString(e.codeWScopeCode())+"]";
             break;
         case mongo::NumberInt:
             obj[name] = e.numberInt();
@@ -53,7 +54,8 @@ mongo::BSONObj toBson(QVariantMap obj) {
 
     QVariantMap::iterator it = obj.begin();
     while(it != obj.end()) {
-        const char* name = it.key().toStdString().c_str();
+        QByteArray byteName = it.key().toStdString().c_str();
+        const char* name = byteName.constData();
         QVariant v = it.value();
         int type = v.type();
 
@@ -71,12 +73,21 @@ mongo::BSONObj toBson(QVariantMap obj) {
         case QVariant::UInt:
             b.append(name, v.toUInt(&ok));
             break;
+        case QVariant::Map:
+            if (v.toMap().value("__TYPE__").toString() == "THIS_IS_MONGO_CODE") {
+                QString code = v.toMap().value("__code").toString();
+                QVariantMap scope = v.toMap().value("__scope").toMap();
+                b.appendCodeWScope(name, code.toStdString().c_str(), toBson(scope));
+            }
+            else
+                b.append(name, toBson(v.toMap()));
+            break;
         case QVariant::Double:
             b.append(name, v.toDouble(&ok));
             break;
         case QVariant::Bool:
             b.appendBool(name, v.toBool());
-            break;
+            break;            
         case QVariant::Time:
             b.appendTimeT(name, v.toDateTime().toTime_t());
             break;
@@ -84,7 +95,7 @@ mongo::BSONObj toBson(QVariantMap obj) {
             b.appendUndefined(name);
             break;
         default:
-            qCritical() << "toBsonObj() failed to convert" << obj << "for" << name << "with type" << type;
+            qCritical() << "toBsonObj() failed to convert" << obj << "for" << name << "with type" << v.typeName();
             ok = false;
         }
         Q_ASSERT(ok);
