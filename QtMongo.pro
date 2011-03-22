@@ -31,14 +31,19 @@ OTHER_FILES += \
     QtMongo/MongoDB.js \
     QtMongo/MongoCollection.js \
     QtMongo/MongoQuery.qml \
-    QtMongo/mongo.js \
     QtMongo/lib/json/json2.js \
     JsonEdit.qml \
     QtMongo/lib/mongodb/collection.js \
     QtMongo/lib/mongodb/db.js \
     QtMongo/lib/mongodb/query.js \
     QtMongo/lib/mongodb/README \
-    QtMongo/MongoCode.js
+    QtMongo/MongoCode.js \
+    QtMongo/lib/mongodb/utils.js \
+    QtMongo/lib/mongodb/utils_patch.js \
+    QtMongo/lib/mongodb/collection_patch.js \
+    QtMongo/lib/mongodb/query_patch.js \
+    QtMongo/lib/mongodb/db_patch.js \
+    QtMongo/mongo.js
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options

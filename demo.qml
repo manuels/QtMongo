@@ -29,19 +29,18 @@ Row {
                 ]
             }
 
-            delegate: mydelegate
-
             // this corresponds to
-            // model = mythings.find({}):
+            // model = mythings.find({x:4}):
             model: MongoQuery {
                 collection: mythings
                 query: {}
-                sort: {}
+//              if you want to use objects here, you MUST use return stmts:
+//              sort: { return { j: -1 } }
             }
 
+            delegate: mydelegate
             Component {
                 id: mydelegate
-
                 Text {
                     text: "Object "+_id
                 }

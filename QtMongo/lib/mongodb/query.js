@@ -3,7 +3,7 @@
 
 if ( typeof DBQuery == "undefined" ){
     DBQuery = function( mongo , db , collection , ns , query , fields , limit , skip , batchSize , options ){
-        
+
         this._mongo = mongo; // 0
         this._db = db; // 1
         this._collection = collection; // 2

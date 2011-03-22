@@ -1,6 +1,5 @@
 import Qt 4.7
 import "MongoDB.js" as MongoDB
-import "lib/json/json2.js" as Json
 
 Item {
     id: mongoDatabase

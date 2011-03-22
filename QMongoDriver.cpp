@@ -59,3 +59,9 @@ QVariantMap QMongoDriver::mapReduce(QString ns, QString map, QString reduce,
                                       toBson(query),
                                       output.toStdString()));
 }
+
+QString QMongoDriver::createObjectId() {
+    mongo::OID oid;
+    oid.init();
+    return QString::fromStdString(oid.str());
+}
