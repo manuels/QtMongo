@@ -3,6 +3,18 @@ var MapReduceResult
 
 Qt.include("collection.js")
 
+DBCollection.prototype._massageObject = (function() {
+    var original = DBCollection.prototype._massageObject;
+    return function(q) {
+        var type = typeof q;
+        if ( type == "function" ) {
+            return { $where : mongoDriver.createFunction(q.toString(), {}) };
+        }
+
+        return original.call(this, q);
+    }
+})()
+
 DBCollection.prototype.mapReduce = (function() {
     return function(map, reduce, optionsOrOutString) {
         assert( optionsOrOutString , "need to an optionsOrOutString" )

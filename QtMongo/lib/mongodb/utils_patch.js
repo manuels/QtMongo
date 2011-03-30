@@ -13,7 +13,7 @@ var ISODate
 var compare
 var compareOn
 var NumberLong = function() {}
-var ObjectId = function() { this.str = Mongo.createObjectId() }
+var ObjectId = function(id) { this.str = id }
 var tojsononeline
 var tojson
 var tojsonObject

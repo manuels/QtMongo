@@ -12,13 +12,15 @@ HEADERS += \
     QtMongoPlugin.h \
     BSON.h \
     QMongoDriver.h \
-    QMongoCursor.h
+    QMongoCursor.h \
+    QMongoType.h
 
 SOURCES += \
     QtMongoPlugin.cpp \
     BSON.cpp \
     QMongoDriver.cpp \
-    QMongoCursor.cpp
+    QMongoCursor.cpp \
+    QMongoType.cpp
 
 OTHER_FILES += \
     demo.qml \
@@ -43,7 +45,10 @@ OTHER_FILES += \
     QtMongo/lib/mongodb/collection_patch.js \
     QtMongo/lib/mongodb/query_patch.js \
     QtMongo/lib/mongodb/db_patch.js \
-    QtMongo/mongo.js
+    QtMongo/mongo.js \
+    QtMongo/jstests.js \
+    QtMongo/lib/jstests/find1.js \
+    QtMongo/MongoDriverWrapper.js
 
 LIBS += -lmongoclient \
     -lboost_thread-mt -lboost_filesystem -lboost_program_options

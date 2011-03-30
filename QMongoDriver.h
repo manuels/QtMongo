@@ -6,6 +6,7 @@
 #include <QDeclarativeEngine>
 #include <mongo/client/dbclient.h>
 
+#include "QMongoType.h"
 #include "QMongoCursor.h"
 
 class QMongoDriver : public QObject
@@ -16,9 +17,6 @@ public:
 
     Q_INVOKABLE
     QMongoDriver* init(QString host);
-
-    Q_INVOKABLE
-    void test(QVariant d);
 
     Q_INVOKABLE
     QMongoCursor* find(QString ns,
@@ -42,7 +40,10 @@ public:
     QVariantMap mapReduce(QString ns, QString map, QString reduce, QVariantMap query, QString output);
 
     Q_INVOKABLE
-    QString createObjectId();
+    QMongoType* createObjectId(QVariantMap objId);
+
+    Q_INVOKABLE
+    QMongoType* createFunction(QString code, QVariantMap scope);
 
 signals:
 
@@ -55,5 +56,6 @@ protected:
     QDeclarativeEngine *m_engine;
     mongo::DBClientConnection *m_c;
 };
+
 
 #endif // QMONGODRIVER_H

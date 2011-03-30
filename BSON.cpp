@@ -1,5 +1,6 @@
 #include <QDebug>
 #include "BSON.h"
+#include "QMongoDriver.h"
 
 QVariantMap fromBson(mongo::BSONObj bson) {
     QVariantMap obj;
@@ -59,6 +60,15 @@ mongo::BSONObj toBson(QVariantMap obj) {
         QVariant v = it.value();
         int type = v.type();
 
+//        qDebug() << "toBson converting type" << v.typeName();
+        if (v.canConvert<QObject*>()) {
+            QMongoType* mongo = qobject_cast<QMongoType*>( v.value<QObject*>() );
+            Q_ASSERT(mongo->o.nFields() == 1);
+            b.appendAs(mongo->o.firstElement(), name);
+            ++it;
+            continue;
+        }
+
         bool ok = true;
         switch(type) {
         case QVariant::Int:
@@ -74,13 +84,7 @@ mongo::BSONObj toBson(QVariantMap obj) {
             b.append(name, v.toUInt(&ok));
             break;
         case QVariant::Map:
-            if (v.toMap().value("__TYPE__").toString() == "THIS_IS_MONGO_CODE") {
-                QString code = v.toMap().value("__code").toString();
-                QVariantMap scope = v.toMap().value("__scope").toMap();
-                b.appendCodeWScope(name, code.toStdString().c_str(), toBson(scope));
-            }
-            else
-                b.append(name, toBson(v.toMap()));
+            b.append(name, toBson(v.toMap()));
             break;
         case QVariant::Double:
             b.append(name, v.toDouble(&ok));
@@ -95,7 +99,7 @@ mongo::BSONObj toBson(QVariantMap obj) {
             b.appendUndefined(name);
             break;
         default:
-            qCritical() << "toBsonObj() failed to convert" << obj << "for" << name << "with type" << v.typeName();
+            qCritical() << "toBson() failed to convert" << obj << "for" << name << "with type" << v.typeName();
             ok = false;
         }
         Q_ASSERT(ok);

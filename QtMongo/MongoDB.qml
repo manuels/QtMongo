@@ -107,7 +107,7 @@ Item {
     }
 
     Component.onCompleted: {
-        MongoDB.init(Mongo.init(host), mongoDatabase.name)
+        MongoDB.init(host, mongoDatabase.name)
 
         // initialize collections
         for(var i = 0; i < collections.length; ++i) {
